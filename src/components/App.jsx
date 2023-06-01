@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
-export class App extends Component {
+import Section from './Section/Section';
+import FeedbackOptions from './Feedback/FeedbackOptions';
+import Statistics from './Statistics/Statistics';
+import Notification from './Notification/Notification';
+
+class App extends Component {
   state = {
     good: 0,
     neutral: 0,
@@ -31,22 +36,28 @@ export class App extends Component {
 
     return (
       <>
-        <h1>Please leave feedback</h1>
-        {feedbackOptions.map(option => (
-          <button
-            key={option}
-            onClick={() => this.handleIncrementStatistic(option)}
-          >
-            {option}
-          </button>
-        ))}
-        <h2>Statistics</h2>
-        <p>Good: {good}</p>
-        <p>Neutral: {neutral}</p>
-        <p>Bad: {bad}</p>
-        <p>Total: {this.countTotalFeedback()}</p>
-        <p>Positive feedback: {positiveFeedback} %</p>
+        <Section title="Please leave feedback">
+          <FeedbackOptions
+            options={feedbackOptions}
+            onLeaveFeedback={this.handleIncrementStatistic}
+          />
+        </Section>
+
+        <Section title="Statistics">
+          {this.countTotalFeedback() ? (
+            <Statistics
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              total={this.countTotalFeedback()}
+              positivePercentage={positiveFeedback}
+            ></Statistics>
+          ) : (
+            <Notification message="There is no feedback"></Notification>
+          )}
+        </Section>
       </>
     );
   }
 }
+export default App;
